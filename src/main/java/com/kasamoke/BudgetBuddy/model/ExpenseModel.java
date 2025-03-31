@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kasamoke.BudgetBuddy.enums.CategoryType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Document(collection = "expenses")
 public class ExpenseModel {
     @Id
-    private String id; // <-- Change from UUID to String
+    private String id; // <-- Changed from UUID to String
 
     @NotNull(message = "User Id is mandatory")
     private UUID userId;
@@ -25,16 +26,22 @@ public class ExpenseModel {
     @JsonFormat(pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date expenseTimestamp;
 
+    @NotNull(message = "Total income is mandatory")
+    @PositiveOrZero(message = "Total income must be zero or a positive value")
+    private Double totalIncome;
+
     public ExpenseModel() {
     }
 
-    public ExpenseModel(String id, UUID userId, Map<CategoryType, Double> expenseCategories, Date expenseTimestamp) {
+    public ExpenseModel(String id, UUID userId, Map<CategoryType, Double> expenseCategories, Date expenseTimestamp, Double totalIncome) {
         this.id = id;
         this.userId = userId;
         this.expenseCategories = expenseCategories;
         this.expenseTimestamp = expenseTimestamp;
+        this.totalIncome = totalIncome;
     }
 
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -67,6 +74,14 @@ public class ExpenseModel {
         this.expenseTimestamp = expenseTimestamp;
     }
 
+    public Double getTotalIncome() {
+        return totalIncome;
+    }
+
+    public void setTotalIncome(Double totalIncome) {
+        this.totalIncome = totalIncome;
+    }
+
     @Override
     public String toString() {
         return "ExpenseModel{" +
@@ -74,6 +89,7 @@ public class ExpenseModel {
                 ", userId=" + userId +
                 ", expenseCategories=" + expenseCategories +
                 ", expenseTimestamp=" + expenseTimestamp +
+                ", totalIncome=" + totalIncome +
                 '}';
     }
 }
