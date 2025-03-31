@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,11 +31,13 @@ public class ExpenseService {
 
         Update update = new Update()
                 .set("expenseCategories", expense.getExpenseCategories())
-                .set("expenseTimestamp", expense.getExpenseTimestamp());
+                .set("expenseTimestamp", expense.getExpenseTimestamp())
+                .set("totalIncome", expense.getTotalIncome()); // <-- Added totalIncome here
 
         // Upsert: update if exists, insert if not
         mongoTemplate.upsert(query, update, ExpenseModel.class);
         return expense;
     }
+
 
 }
