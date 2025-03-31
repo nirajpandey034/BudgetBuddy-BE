@@ -4,12 +4,11 @@ import com.kasamoke.BudgetBuddy.model.ExpenseModel;
 import com.kasamoke.BudgetBuddy.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/expense")
@@ -32,6 +31,24 @@ public class ExpenseController {
         }
         catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    // ✅ Get expenses by month and year
+    @GetMapping({"/list", "/list"})
+    public ResponseEntity<?> getExpensesByMonth(
+            @RequestParam UUID userId,
+            @RequestParam int month,
+            @RequestParam int year) {
+
+        try {
+            List<ExpenseModel> expenses = expenseService.getExpensesByMonth(userId, month, year);
+            if (expenses.isEmpty()) {
+                return ResponseEntity.status(404).body("No expenses found for the given month and year.");
+            }
+            return ResponseEntity.ok(expenses);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 }
