@@ -1,5 +1,5 @@
-# Use a JDK 21 version for Maven build
-FROM maven:3.9.0-eclipse-temurin-21 as build
+# Stage 1: Build with Maven using a valid JDK 21 version
+FROM maven:3.9.5-eclipse-temurin-21 AS build
 
 # Set working directory
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY src ./src
 # Run Maven to build the project
 RUN mvn clean package -DskipTests
 
-# Use JDK 21 for the final image
+# Stage 2: Run the built application using JDK 21
 FROM eclipse-temurin:21-jdk
 
 # Set working directory in the container
