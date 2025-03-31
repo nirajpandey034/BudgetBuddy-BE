@@ -1,10 +1,18 @@
-# Use an official Java 17 runtime as base image
+# Use an official OpenJDK runtime as base image
 FROM openjdk:17-jdk-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy the built jar file into the container
+# Copy pom.xml and source code to container
+COPY pom.xml ./
+COPY src ./src
+
+# Run Maven to build the project
+RUN apt-get update && apt-get install -y maven
+RUN mvn clean package
+
+# Copy the generated jar file into the container
 COPY target/*.jar app.jar
 
 # Run the jar file
