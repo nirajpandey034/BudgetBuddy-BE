@@ -1,11 +1,5 @@
-# Use OpenJDK as base image
-FROM openjdk:17-jdk-slim
-
-# Set environment to non-interactive
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install Maven manually
-RUN apt-get update && apt-get install -y maven
+# Use a JDK 21 version for Maven build
+FROM maven:3.9.0-eclipse-temurin-21 as build
 
 # Set working directory
 WORKDIR /app
@@ -17,8 +11,14 @@ COPY src ./src
 # Run Maven to build the project
 RUN mvn clean package -DskipTests
 
-# Copy the generated jar file
-COPY target/*.jar app.jar
+# Use JDK 21 for the final image
+FROM eclipse-temurin:21-jdk
+
+# Set working directory in the container
+WORKDIR /app
+
+# Copy the generated jar from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]
