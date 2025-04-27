@@ -36,6 +36,7 @@ public class UserService {
             throw new RuntimeException("Email already exists");
         }
         userModel.setPassword(encoder.encode(userModel.getPassword()));
+        System.out.println(userModel);
         UserModel newUser = userRepository.save(userModel);
         UserModel user = userRepository.save(newUser);
         UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName());
