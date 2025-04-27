@@ -30,15 +30,19 @@ public class ExpenseModel {
     @PositiveOrZero(message = "Total income must be zero or a positive value")
     private Double totalIncome;
 
+    private Double deficit;
+
     public ExpenseModel() {
     }
 
-    public ExpenseModel(String id, UUID userId, Map<CategoryType, Double> expenseCategories, Date expenseTimestamp, Double totalIncome) {
+
+    public ExpenseModel(String id, UUID userId, Map<CategoryType, Double> expenseCategories, Date expenseTimestamp, Double totalIncome, Double deficit) {
         this.id = id;
         this.userId = userId;
         this.expenseCategories = expenseCategories;
         this.expenseTimestamp = expenseTimestamp;
         this.totalIncome = totalIncome;
+        this.deficit = deficit;
     }
 
     // Getters and Setters
@@ -56,6 +60,14 @@ public class ExpenseModel {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public Double getDeficit() {
+        return deficit;
+    }
+
+    public void setDeficit(Double deficit) {
+        this.deficit = deficit;
     }
 
     public Map<CategoryType, Double> getExpenseCategories() {

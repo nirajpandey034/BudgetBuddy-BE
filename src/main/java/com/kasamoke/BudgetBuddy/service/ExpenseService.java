@@ -32,7 +32,8 @@ public class ExpenseService {
         Update update = new Update()
                 .set("expenseCategories", expense.getExpenseCategories())
                 .set("expenseTimestamp", expense.getExpenseTimestamp())
-                .set("totalIncome", expense.getTotalIncome()); // <-- Added totalIncome here
+                .set("totalIncome", expense.getTotalIncome()) // <-- Added totalIncome here
+                .set("deficit", expense.getDeficit());
 
         // Upsert: update if exists, insert if not
         mongoTemplate.upsert(query, update, ExpenseModel.class);
@@ -55,7 +56,7 @@ public class ExpenseService {
         // Query to filter expenses by userId and timestamp range
         Query query = new Query(Criteria.where("userId").is(userId)
                 .and("expenseTimestamp").gte(startDate).lt(endDate))
-                .with(Sort.by(Sort.Direction.DESC, "expenseTimestamp")); // Sort by timestamp descending
+                .with(Sort.by(Sort.Direction.DESC, "expenseTimesamp")); // Sort by timestamp descending
 
         return mongoTemplate.find(query, ExpenseModel.class);
     }
